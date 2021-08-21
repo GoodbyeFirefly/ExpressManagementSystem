@@ -3,4 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+    <servlet>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>com.xxy.mvc.DispatcherServlet</servlet-class>
+        <!--模拟spring MVC框架 需要添加一些配置参数 默认在src目录下-->
+        <init-param>
+            <param-name>contentConfigLocation</param-name>
+            <param-value>application.properties</param-value>
+        </init-param>
+        <!--项目启动时加载此servlet-->
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
 </web-app>
