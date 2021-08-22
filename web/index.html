@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>二维码生成</title>
+    <script src="js/jquery2.1.4.js"></script>
+    <script src="js/jquery.qrcode.js"></script>
+    <script src="js/utf.js"></script>
+
+</head>
+<body>
+    <div id="qrcode"></div>
+
+<script>
+    var config = {
+        width:200,
+        height:200,
+        text:'加强刻晴！'
+    };
+    $("#qrcode").qrcode(config);
+
+</script>
+
+</body>
+</html>
