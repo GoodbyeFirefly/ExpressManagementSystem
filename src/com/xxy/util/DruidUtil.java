@@ -41,7 +41,7 @@ public class DruidUtil {
 
     public static void close(Connection conn, Statement state, ResultSet rs){
         try {
-            rs.close();
+            if (rs != null) {rs.close();}
         } catch (Exception throwables) {
             throwables.printStackTrace();
         }
