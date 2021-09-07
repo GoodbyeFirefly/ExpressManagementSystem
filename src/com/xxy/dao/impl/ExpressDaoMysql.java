@@ -2,7 +2,12 @@ package com.xxy.dao.impl;
 
 import com.xxy.bean.Express;
 import com.xxy.dao.BaseExpressDao;
+import com.xxy.util.DruidUtil;
+import com.xxy.exception.DuplicateCodeException;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +43,46 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public List<Map<String, Integer>> console() {
-        return null;
+        List<Map<String, Integer>> data = new ArrayList<>();
+
+        // 1 获取数据库连接
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;// 变量向上抽取，便于释放资源
+        ResultSet result = null;
+
+        try {
+            // 2 预编译SQL语句
+            statement = connection.prepareStatement(SQL_CONSOLE);
+
+            // 3 填充参数(可选)
+
+            // 4 执行SQL语句
+            result = statement.executeQuery();
+
+            // 5 获得执行结果
+            if (result.next()) {
+                int data1_size = result.getInt("data1_size");
+                int data1_day = result.getInt("data1_day");
+                int data2_size = result.getInt("data2_size");
+                int data2_day = result.getInt("data2_day");
+                Map data1 = new HashMap();
+                data1.put("data1_size", data1_size);
+                data1.put("data1_day", data1_day);
+                Map data2 = new HashMap();
+                data2.put("data2_size", data2_size);
+                data2.put("data2_day", data2_day);
+                data.add(data1);
+                data.add(data2);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 6 释放资源
+            DruidUtil.close(connection, statement, result);
+        }
+        return data;
     }
 
     /**
@@ -51,7 +95,48 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public List<Express> findAll(boolean limit, int offset, int pageNumber) {
-        return null;
+        ArrayList<Express> data = new ArrayList<>();
+        //1.    获取数据库的连接
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement state = null;
+        ResultSet result = null;
+        //2.    预编译SQL语句
+        try {
+            if(limit) {
+                state = conn.prepareStatement(SQL_FIND_LIMIT);
+                //3.    填充参数(可选)
+                state.setInt(1,offset);
+                state.setInt(2,pageNumber);
+            } else {
+                state = conn.prepareStatement(SQL_FIND_ALL);
+            }
+
+            //4.    执行SQL语句
+            result = state.executeQuery();
+
+            //5.    获取执行的结果
+            while(result.next()) {
+                int id = result.getInt("id");
+                String number = result.getString("number");
+                String username = result.getString("username");
+                String userPhone = result.getString("userPhone");
+                String company = result.getString("company");
+                String code = result.getString("code");
+                Timestamp inTime = result.getTimestamp("inTime");
+                Timestamp outTime = result.getTimestamp("outTime");
+                int status = result.getInt("status");
+                String sysPhone = result.getString("sysPhone");
+                Express e = new Express(id,number,username,userPhone,company,code,inTime,outTime,status,sysPhone);
+                data.add(e);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            //6.    资源的释放
+            DruidUtil.close(conn,state,result);
+        }
+        return data;
     }
 
     /**
@@ -62,6 +147,41 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public Express findByNumber(String number) {
+        // 1 获取数据库连接
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        try {
+            // 2 预编译SQL语句
+            statement = connection.prepareStatement(SQL_FIND_BY_NUMBER);
+
+            // 3 填充参数(可选)
+            statement.setString(1, number);
+
+            // 4 执行SQL语句
+            result = statement.executeQuery();
+
+            // 5 获得执行结果
+            if (result.next()) {
+                int id = result.getInt("id");
+                String username = result.getString("username");
+                String userPhone = result.getString("userPhone");
+                String company = result.getString("company");
+                String code = result.getString("code");
+                Timestamp inTime = result.getTimestamp("inTime");
+                Timestamp outTime = result.getTimestamp("outTime");
+                int status = result.getInt("status");
+                String sysPhone = result.getString("sysPhone");
+                Express e = new Express(id,number,username,userPhone,company,code,inTime,outTime,status,sysPhone);
+                return  e;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 6 释放资源
+            DruidUtil.close(connection, statement, result);
+        }
         return null;
     }
 
@@ -73,6 +193,42 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public Express findByCode(String code) {
+        // 1 获取数据库连接
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        try {
+            // 2 预编译SQL语句
+            statement = connection.prepareStatement(SQL_FIND_BY_CODE);
+
+            // 3 填充参数(可选)
+            statement.setString(1, code);
+
+            // 4 执行SQL语句
+            result = statement.executeQuery();
+
+            // 5 获得执行结果
+            if (result.next()) {
+                int id = result.getInt("id");
+                String number = result.getString("number");
+                String username = result.getString("username");
+                String userPhone = result.getString("userPhone");
+                String company = result.getString("company");
+                Timestamp inTime = result.getTimestamp("inTime");
+                Timestamp outTime = result.getTimestamp("outTime");
+                int status = result.getInt("status");
+                String sysPhone = result.getString("sysPhone");
+                Express e = new Express(id,number,username,userPhone,company,code,inTime,outTime,status,sysPhone);
+                return  e;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 6 释放资源
+            DruidUtil.close(connection, statement, result);
+        }
         return null;
     }
 
@@ -84,7 +240,44 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public List<Express> findByUserPhone(String userPhone) {
-        return null;
+        List<Express> data = new ArrayList<>();
+        // 1 获取数据库连接
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        try {
+            // 2 预编译SQL语句
+            statement = connection.prepareStatement(SQL_FIND_BY_USERPHONE);
+
+            // 3 填充参数(可选)
+            statement.setString(1, userPhone);
+
+            // 4 执行SQL语句
+            result = statement.executeQuery();
+
+            // 5 获得执行结果
+            while (result.next()) {
+                int id = result.getInt("id");
+                String number = result.getString("number");
+                String username = result.getString("username");
+                String company = result.getString("company");
+                String code = result.getString("code");
+                Timestamp inTime = result.getTimestamp("inTime");
+                Timestamp outTime = result.getTimestamp("outTime");
+                int status = result.getInt("status");
+                String sysPhone = result.getString("sysPhone");
+                Express e = new Express(id,number,username,userPhone,company,code,inTime,outTime,status,sysPhone);
+                data.add(e);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 6 释放资源
+            DruidUtil.close(connection, statement, result);
+        }
+        return data;
     }
 
     /**
@@ -95,7 +288,44 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public List<Express> findBySysPhone(String sysPhone) {
-        return null;
+        List<Express> data = new ArrayList<>();
+        // 1 获取数据库连接
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet result = null;
+
+        try {
+            // 2 预编译SQL语句
+            statement = connection.prepareStatement(SQL_FIND_BY_SYSPHONE);
+
+            // 3 填充参数(可选)
+            statement.setString(1, sysPhone);
+
+            // 4 执行SQL语句
+            result = statement.executeQuery();
+
+            // 5 获得执行结果
+            while (result.next()) {
+                int id = result.getInt("id");
+                String number = result.getString("number");
+                String username = result.getString("username");
+                String userPhone = result.getString("userPhone");
+                String company = result.getString("company");
+                String code = result.getString("code");
+                Timestamp inTime = result.getTimestamp("inTime");
+                Timestamp outTime = result.getTimestamp("outTime");
+                int status = result.getInt("status");
+                Express e = new Express(id,number,username,userPhone,company,code,inTime,outTime,status,sysPhone);
+                data.add(e);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 6 释放资源
+            DruidUtil.close(connection, statement, result);
+        }
+        return data;
     }
 
     /**
@@ -105,7 +335,35 @@ public class ExpressDaoMysql implements BaseExpressDao {
      * @return 录入的结果，true表示成功，false表示失败
      */
     @Override
-    public boolean insert(Express e) {
+    public boolean insert(Express e) throws DuplicateCodeException {
+        //1.    连接的获取
+        Connection conn = DruidUtil.getConnection();
+        //2.    预编译SQL语句
+        PreparedStatement state = null;
+        try {
+            state = conn.prepareStatement(SQL_INSERT);
+            //3.    填充参数
+            state.setString(1,e.getNumber());
+            state.setString(2,e.getUsername());
+            state.setString(3,e.getUserphone());
+            state.setString(4,e.getCompany());
+            state.setString(5,e.getCode());
+            state.setString(6,e.getSysPhone());
+            //4.    执行SQL语句,并获取执行结果
+            return state.executeUpdate()>0?true:false;
+        } catch (SQLException e1) {
+            /*throwables.printStackTrace();*/
+            if(e1.getMessage().endsWith("for key 'code'")){
+                //是因为取件码重复,而出现了异常
+                DuplicateCodeException e2 = new DuplicateCodeException(e1.getMessage());
+                throw e2;
+            }else{
+                e1.printStackTrace();
+            }
+        }finally {
+            //5.    释放资源
+            DruidUtil.close(conn,state,null);
+        }
         return false;
     }
 
@@ -118,6 +376,23 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public boolean update(int id, Express newExpress) {
+        //1.    连接的获取
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement state = null;
+        //2.    预编译SQL语句
+        try {
+            state = conn.prepareStatement(SQL_UPDATE);
+            state.setString(1,newExpress.getNumber());
+            state.setString(2,newExpress.getUsername());
+            state.setString(3,newExpress.getCompany());
+            state.setInt(4,newExpress.getStatus());
+            state.setInt(5,id);
+            return state.executeUpdate()>0?true:false;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            DruidUtil.close(conn,state,null);
+        }
         return false;
     }
 
@@ -129,6 +404,19 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public boolean updateStatus(String code) {
+        //1.    连接的获取
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement state = null;
+        //2.    预编译SQL语句
+        try {
+            state = conn.prepareStatement(SQL_UPDATE_STATUS);
+            state.setString(1, code);
+            return state.executeUpdate()>0?true:false;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            DruidUtil.close(conn,state,null);
+        }
         return false;
     }
 
@@ -140,6 +428,19 @@ public class ExpressDaoMysql implements BaseExpressDao {
      */
     @Override
     public boolean delete(int id) {
+        //1.    连接的获取
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement state = null;
+        //2.    预编译SQL语句
+        try {
+            state = conn.prepareStatement(SQL_DELETE);
+            state.setInt(1,id);
+            return state.executeUpdate()>0?true:false;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            DruidUtil.close(conn,state,null);
+        }
         return false;
     }
 }

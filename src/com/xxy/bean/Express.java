@@ -38,6 +38,19 @@ public class Express {
     this.sysPhone = sysPhone;
   }
 
+  public Express(int id, String number, String username, String userphone, String company, String code, Timestamp intime, Timestamp outtime, int status, String sysPhone) {
+    this.id = id;
+    this.number = number;
+    this.username = username;
+    this.userphone = userphone;
+    this.company = company;
+    this.code = code;
+    this.intime = intime;
+    this.outtime = outtime;
+    this.status = status;
+    this.sysPhone = sysPhone;
+  }
+
   public Express() {
   }
 
@@ -133,25 +146,25 @@ public class Express {
   }
 
 
-  public java.sql.Timestamp getIntime() {
+  public Timestamp getIntime() {
     return intime;
   }
 
-  public void setIntime(java.sql.Timestamp intime) {
+  public void setIntime(Timestamp intime) {
     this.intime = intime;
   }
 
 
-  public java.sql.Timestamp getOuttime() {
+  public Timestamp getOuttime() {
     return outtime;
   }
 
-  public void setOuttime(java.sql.Timestamp outtime) {
+  public void setOuttime(Timestamp outtime) {
     this.outtime = outtime;
   }
 
 
-  public long getStatus() {
+  public int getStatus() {
     return status;
   }
 
