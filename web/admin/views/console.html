@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../assets/css/layui.css">
     <link rel="stylesheet" href="../assets/css/view.css"/>
     <script src="../assets/echarts.min.js"></script>
+    <script src="../../js/jquery2.1.4.js"></script>
     <title></title>
 </head>
 <body class="layui-view-body">
@@ -67,7 +68,7 @@
                                 <div class="meta">
                                     <span>总快件数</span>
                                 </div>
-                                <div class="total">126,560</div>
+                                <div id="data1_size" class="total">-</div>
                             </div>
                         </div>
                         <div class="chart-body">
@@ -77,7 +78,7 @@
                         <div class="chart-footer">
                             <div class="field">
                                 <span>日派单量</span>
-                                <span>999</span>
+                                <span id="data1_day">-</span>
                             </div>
                         </div>
                     </div>
@@ -91,7 +92,7 @@
                                 <div class="meta">
                                     <span>待取件数</span>
                                 </div>
-                                <div class="total">1168</div>
+                                <div id="data2_size" class="total">-</div>
                             </div>
                         </div>
                         <div class="chart-body">
@@ -101,7 +102,7 @@
                         <div class="chart-footer">
                             <div class="field">
                                 <span>新增数量</span>
-                                <span>333</span>
+                                <span id="data2_day">-</span>
                             </div>
                         </div>
                     </div>
@@ -127,6 +128,19 @@
     <script src="../assets/layui.all.js"></script>
     <script>
      var element = layui.element;
+    </script>
+    <script>
+        $(function () {
+            $.post("/express/console.do", null, function (data) {
+                if (data.status == 0) {
+                    // [{size:总数,day:新增},{size:总数,day:新增}]
+                    $("#data1_size").html(data.data[0].data1_size);
+                    $("#data1_day").html(data.data[0].data1_day);
+                    $("#data2_size").html(data.data[1].data2_size);
+                    $("#data2_day").html(data.data[1].data2_day);
+                }
+            }, "JSON");
+        });
     </script>
 </body>
 </html>

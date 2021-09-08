@@ -5,6 +5,7 @@ import com.xxy.dao.BaseExpressDao;
 import com.xxy.dao.impl.ExpressDaoMysql;
 import com.xxy.exception.DuplicateCodeException;
 import com.xxy.util.RandomUtil;
+import com.xxy.util.SMSUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,12 @@ public class ExpressService {
     public static boolean insert(Express e) {
         e.setCode(RandomUtil.getCode()+"");
         try {
-            return dao.insert(e);
+            boolean insert = dao.insert(e);
+            boolean send = false;
+            if (insert) {
+                send = SMSUtil.send(e.getUserphone(), e.getCode());
+            }
+            return send;
         } catch (DuplicateCodeException e1) {
             // 捕获到取件码重复后 递归调用插入
             return insert(e);
@@ -102,7 +108,7 @@ public class ExpressService {
             dao.delete(id);
             return insert(newExpress);
         } else {
-            // 这里的逻辑感觉不是很清晰，后面有问题再来修改吧
+            // 这里的逻辑感觉不是很清晰，注释上修改的是userPhone，后面SQL语句中却替换为status，后面有问题再来修改吧
             boolean update = dao.update(id, newExpress);
             Express e = dao.findByNumber(newExpress.getNumber());
             if (newExpress.getStatus() == 1) {
