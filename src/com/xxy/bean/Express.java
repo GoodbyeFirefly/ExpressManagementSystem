@@ -17,6 +17,15 @@ public class Express {
   private int status;
   private String sysPhone;
 
+  // 添加构造方法，用于前端插入快件
+  public Express(String number, String username, String userphone, String company, String sysPhone) {
+    this.number = number;
+    this.username = username;
+    this.userphone = userphone;
+    this.company = company;
+    this.sysPhone = sysPhone;
+  }
+
   public Express(String number, String username, String userphone, String company, String code, String sysPhone) {
     this.number = number;
     this.username = username;
@@ -92,7 +101,7 @@ public class Express {
     return Objects.hash(id, number, username, userphone, company, code, intime, outtime, status, sysPhone);
   }
 
-  public long getId() {
+  public int getId() {
     return id;
   }
 
