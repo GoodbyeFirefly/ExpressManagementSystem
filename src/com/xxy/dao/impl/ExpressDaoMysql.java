@@ -30,7 +30,7 @@ public class ExpressDaoMysql implements BaseExpressDao {
     // 录入快递
     public static final String SQL_INSERT = "INSERT INTO EXPRESS (NUMBER,USERNAME,USERPHONE,COMPANY,CODE,INTIME,STATUS,SYSPHONE) VALUES(?,?,?,?,?,NOW(),0,?)";
     // 快递修改(这里要修改status而不是userPhone???)
-    public static final String SQL_UPDATE = "UPDATE EXPRESS SET NUMBER=?,USERNAME=?,COMPANY=?,STATUS=? WHERE ID=?";
+    public static final String SQL_UPDATE = "UPDATE EXPRESS SET NUMBER=?,USERNAME=?,USERPHONE=?,COMPANY=?,STATUS=? WHERE ID=?";
     // 快递的状态码改变（取件）
     public static final String SQL_UPDATE_STATUS = "UPDATE EXPRESS SET STATUS=1,OUTTIME=NOW(),CODE=NULL WHERE CODE=?";
     // 快递的删除
@@ -384,9 +384,10 @@ public class ExpressDaoMysql implements BaseExpressDao {
             state = conn.prepareStatement(SQL_UPDATE);
             state.setString(1,newExpress.getNumber());
             state.setString(2,newExpress.getUsername());
-            state.setString(3,newExpress.getCompany());
-            state.setInt(4,newExpress.getStatus());
-            state.setInt(5,id);
+            state.setString(3,newExpress.getUserphone());
+            state.setString(4,newExpress.getCompany());
+            state.setInt(5,newExpress.getStatus());
+            state.setInt(6,id);
             return state.executeUpdate()>0?true:false;
         } catch (SQLException throwables) {
             throwables.printStackTrace();

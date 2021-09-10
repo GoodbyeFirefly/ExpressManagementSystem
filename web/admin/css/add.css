@@ -3,6 +3,10 @@ body{
 	padding: 20px;
 	font-size: 14px;
 }
+/*由于样式冲突，导致提示框内文字无法显示，因此修改框架内的样式*/
+.layui-layer-content{
+	color: #fff;
+}
 #app{
 	
 	background: #FFFFFF;

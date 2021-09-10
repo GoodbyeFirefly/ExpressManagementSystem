@@ -85,4 +85,65 @@ public class ExpressController {
         return json;
     }
 
+    @ResponseBody("/express/find.do")
+    public String find(HttpServletRequest req, HttpServletResponse resp) {
+        String number = req.getParameter("number");
+        Express e = ExpressService.findByNumber(number);
+        Message msg = new Message();
+        if (e == null) {
+            msg.setStatus(-1);
+            msg.setResult("单号不存在");
+        } else {
+            msg.setStatus(0);
+            msg.setResult("查找成功");
+            msg.setData(e);
+        }
+        String json = JSONUtil.toJSON(msg);
+        return json;
+    }
+
+    @ResponseBody("/express/update.do")
+    public String update(HttpServletRequest req, HttpServletResponse resp) {
+        int id = Integer.parseInt(req.getParameter("id"));
+        String number = req.getParameter("number");
+        String company = req.getParameter("company");
+        String username = req.getParameter("username");
+        String userphone = req.getParameter("userphone");
+        int status = Integer.parseInt(req.getParameter("status"));
+
+        Express e = new Express();
+        e.setNumber(number);
+        e.setCompany(company);
+        e.setUsername(username);
+        e.setUserphone(userphone);
+        e.setStatus(status);
+        boolean update = ExpressService.update(id, e);
+        Message msg = new Message();
+        if (update) {
+            msg.setStatus(0);
+            msg.setResult("修改成功");
+        } else {
+            msg.setStatus(-1);
+            msg.setResult("修改失败");
+        }
+        String json = JSONUtil.toJSON(msg);
+        return json;
+    }
+
+    @ResponseBody("/express/delete.do")
+    public String delete(HttpServletRequest request,HttpServletResponse response){
+        int id = Integer.parseInt(request.getParameter("id"));
+        boolean flag = ExpressService.delete(id);
+        Message msg = new Message();
+        if(flag){
+            msg.setStatus(0);
+            msg.setResult("删除成功");
+        }else{
+            msg.setStatus(-1);
+            msg.setResult("删除失败");
+        }
+        String json = JSONUtil.toJSON(msg);
+        return json;
+    }
+
 }
