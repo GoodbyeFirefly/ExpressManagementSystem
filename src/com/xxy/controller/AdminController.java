@@ -25,6 +25,8 @@ public class AdminController {
             Date date = new Date();
             String ip = req.getRemoteAddr();
             AdminService.updateLoginTimeAndIP(username, date, ip);
+
+            req.getSession().setAttribute("adminUsername", "username");
         } else {
             msg = new Message(-1, "登录失败");
         }
