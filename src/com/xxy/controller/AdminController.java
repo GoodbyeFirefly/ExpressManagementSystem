@@ -2,6 +2,7 @@ package com.xxy.controller;
 
 import com.xxy.bean.Message;
 import com.xxy.mvc.ResponseBody;
+import com.xxy.mvc.ResponseView;
 import com.xxy.service.AdminService;
 import com.xxy.util.JSONUtil;
 
@@ -34,6 +35,11 @@ public class AdminController {
         String json = JSONUtil.toJSON(msg);
         // 5, 将JSON返回给ajax
         return json;
+    }
 
+    @ResponseView("/admin/logout.do")
+    public String logout(HttpServletRequest req, HttpServletResponse resp) {
+        req.getSession().invalidate();
+        return "/admin/login.html";
     }
 }
