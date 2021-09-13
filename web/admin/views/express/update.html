@@ -14,7 +14,7 @@
 			<div class="content">
 				<table>	
 					<tr>
-						<td class="text-right">运单号</td><td class="content_right"><input class="input inline-input" id="number" placeholder="请输入运单号码"> <span class="btn btn-info" id="find">立即查找</span></td>
+						<td class="text-right">运单号</td><td class="content_right"><input class="input inline-input" id="number" placeholder="请输入运单号码" pattern="1[0-9]{2,5}" title="请输入3-6位数字"> <span class="btn btn-info" id="find">立即查找</span></td>
 					</tr>
 				</table>
 			</div>
@@ -26,16 +26,16 @@
 			<div class="content">
 				<table>
 					<tr>
-						<td class="text-right">快递单号</td><td class="content_right"><input class="input" placeholder="请输入姓名"></td>
+						<td class="text-right">快递单号</td><td class="content_right"><input class="input" placeholder="请输入快递单号" pattern="1[0-9]{2,5}" title="请输入3-6位数字"></td>
 					</tr>
 					<tr>
-						<td class="text-right">快递公司</td><td class="content_right"><input class="input" placeholder="请输入姓名"></td>
+						<td class="text-right">快递公司</td><td class="content_right"><input class="input" placeholder="请输入快递公司"></td>
 					</tr>
 					<tr>
-						<td class="text-right">收货人姓名</td><td class="content_right"><input class="input" placeholder="请输入姓名"></td>
+						<td class="text-right">收货人姓名</td><td class="content_right"><input class="input" placeholder="请输入收货人姓名"></td>
 					</tr>
 					<tr>
-						<td class="text-right">手机号码</td><td class="content_right"><input class="input" placeholder="请输入姓名"></td>
+						<td class="text-right">手机号码</td><td class="content_right"><input class="input" placeholder="请输入手机号码" pattern="(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$" title="请输入正确的手机号码"></td>
 					</tr>
 					<tr>
 						<td class="text-right">快递状态</td><td class="content_right"><input type="radio" name="status" class="status" value="1">已签收  <input name="status" type="radio" class="status" value="0">未签收</td>
