@@ -17,7 +17,13 @@ public class Courier {
     public Courier() {
     }
 
-
+    public Courier(String number, String couriername, String courierphone, String idcard, String password) {
+        this.number = number;
+        this.couriername = couriername;
+        this.courierphone = courierphone;
+        this.idcard = idcard;
+        this.password = password;
+    }
 
     public Courier(int id, String number, String couriername, String courierphone, String idcard, String password, int count, Timestamp registertime, Timestamp logintime) {
         this.id = id;

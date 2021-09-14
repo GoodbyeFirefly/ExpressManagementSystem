@@ -12,7 +12,7 @@ public class CourierDaoMysql implements BaseCourierDao {
     public static final String SQL_FIND_ALL = "SELECT * FROM ECOURIER";
     public static final String SQL_FIND_LIMIT = "SELECT * FROM ECOURIER LIMIT ?,?";
     public static final String SQL_GET_TOTAL = "SELECT COUNT(ID) total FROM ECOURIER";
-//    public static final String SQL_FINDALL = "";
+    public static final String SQL_INSERT = "INSERT INTO ECOURIER (NUMBER,COURIERNAME,COURIERPHONE,IDCARD,PASSWORD,COUNT,REGISTERTIME,LOGINTIME) VALUES(?,?,?,?,?,0,NOW(),NOW())";
 //    public static final String SQL_FINDALL = "";
 //    public static final String SQL_FINDALL = "";
 //    public static final String SQL_FINDALL = "";
@@ -73,7 +73,30 @@ public class CourierDaoMysql implements BaseCourierDao {
         } finally {
             DruidUtil.close(conn, statement, rs);
         }
-        System.out.println(total);
+//        System.out.println(total);
         return total;
+    }
+
+    @Override
+    public Boolean insert(Courier courier) {
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        int total = 0;
+        try {
+            statement = conn.prepareStatement(SQL_INSERT);
+            statement.setString(1, courier.getNumber());
+            statement.setString(2, courier.getCouriername());
+            statement.setString(3, courier.getCourierphone());
+            statement.setString(4, courier.getIdcard());
+            statement.setString(5, courier.getPassword());
+            return statement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(conn, statement, rs);
+        }
+        return false;
     }
 }

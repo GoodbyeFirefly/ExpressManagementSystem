@@ -2,6 +2,7 @@ package com.xxy.controller;
 
 import com.xxy.bean.BootstrapTableCourier;
 import com.xxy.bean.Courier;
+import com.xxy.bean.Message;
 import com.xxy.bean.ResultData;
 import com.xxy.mvc.ResponseBody;
 import com.xxy.service.CourierService;
@@ -32,5 +33,26 @@ public class CourierController {
         data.setRows(list2);
         data.setTotal(total);
         return JSONUtil.toJSON(data);
+    }
+
+    @ResponseBody("/courier/insert.do")
+    public String insert(HttpServletRequest req, HttpServletResponse resp) {
+        String couriername = req.getParameter("couriername");
+        String courierphone = req.getParameter("courierphone");
+        String idcard = req.getParameter("idcard");
+        String password = req.getParameter("password");
+
+        int total = 100000 + CourierService.gettotal();
+        Courier courier = new Courier(String.valueOf(total), couriername, courierphone, idcard, password);
+        Boolean flag = CourierService.insert(courier);
+        Message msg = new Message();
+        if (flag) {
+            msg.setStatus(0);
+            msg.setResult("录入成功");
+        } else {
+            msg.setStatus(-1);
+            msg.setResult("录入失败");
+        }
+        return JSONUtil.toJSON(msg);
     }
 }

@@ -350,7 +350,7 @@ public class ExpressDaoMysql implements BaseExpressDao {
             state.setString(5,e.getCode());
             state.setString(6,e.getSysPhone());
             //4.    执行SQL语句,并获取执行结果
-            return state.executeUpdate()>0?true:false;
+            return state.executeUpdate() > 0;
         } catch (SQLException e1) {
             /*throwables.printStackTrace();*/
             if(e1.getMessage().endsWith("for key 'code'")){

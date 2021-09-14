@@ -8,4 +8,6 @@ public interface BaseCourierDao {
     List<Courier> findall(boolean limit, int offset, int pageNumber);
 
     int gettotal();
+
+    Boolean insert(Courier courier);
 }

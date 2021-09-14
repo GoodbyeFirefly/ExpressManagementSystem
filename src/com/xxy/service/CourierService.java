@@ -15,4 +15,8 @@ public class CourierService {
     public static int gettotal() {
         return dao.gettotal();
     }
+
+    public static Boolean insert(Courier courier) {
+        return dao.insert(courier);
+    }
 }
