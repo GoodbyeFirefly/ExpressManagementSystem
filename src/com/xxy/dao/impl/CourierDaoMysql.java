@@ -13,9 +13,13 @@ public class CourierDaoMysql implements BaseCourierDao {
     public static final String SQL_FIND_LIMIT = "SELECT * FROM ECOURIER LIMIT ?,?";
     public static final String SQL_GET_TOTAL = "SELECT COUNT(ID) total FROM ECOURIER";
     public static final String SQL_INSERT = "INSERT INTO ECOURIER (NUMBER,COURIERNAME,COURIERPHONE,IDCARD,PASSWORD,COUNT,REGISTERTIME,LOGINTIME) VALUES(?,?,?,?,?,0,NOW(),NOW())";
+    public static final String SQL_FIND_BY_PHONE = "SELECT * FROM ECOURIER WHERE COURIERPHONE=?";
+    public static final String SQL_UPDATE = "UPDATE ECOURIER SET COURIERNAME=?,COURIERPHONE=?,IDCARD=?,PASSWORD=? WHERE NUMBER=?";
 //    public static final String SQL_FINDALL = "";
-//    public static final String SQL_FINDALL = "";
-//    public static final String SQL_FINDALL = "";
+    //    public static final String SQL_FINDALL = "";
+
+    //    public static final String SQL_FINDALL = "";
+
 
 
     @Override
@@ -92,6 +96,52 @@ public class CourierDaoMysql implements BaseCourierDao {
             statement.setString(5, courier.getPassword());
             return statement.executeUpdate() > 0;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(conn, statement, rs);
+        }
+        return false;
+    }
+
+    @Override
+    public Courier findByPhone(String courierphone) {
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = conn.prepareStatement(SQL_FIND_BY_PHONE);
+            statement.setString(1, courierphone);
+            rs = statement.executeQuery();
+            if (rs.next()) {
+                String number = rs.getString("number");
+                String couriername = rs.getString("couriername");
+                String courierphone1 = rs.getString("courierphone");
+                String idcard = rs.getString("idcard");
+                String password = rs.getString("password");
+                return new Courier(number, couriername, courierphone1, idcard, password);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(conn, statement, rs);
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean update(Courier courier) {
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = conn.prepareStatement(SQL_UPDATE);
+            statement.setString(1, courier.getCouriername());
+            statement.setString(2, courier.getCourierphone());
+            statement.setString(3, courier.getIdcard());
+            statement.setString(4, courier.getPassword());
+            statement.setString(5, courier.getNumber());
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

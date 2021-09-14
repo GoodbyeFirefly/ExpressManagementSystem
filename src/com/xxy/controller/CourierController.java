@@ -55,4 +55,41 @@ public class CourierController {
         }
         return JSONUtil.toJSON(msg);
     }
+
+    @ResponseBody("/courier/find.do")
+    public String find(HttpServletRequest req, HttpServletResponse resp) {
+        String courierphone = req.getParameter("courierphone");
+        Courier courier = CourierService.findByPhone(courierphone);
+        Message msg = new Message();
+        if (courier != null) {
+            msg.setResult("查找成功");
+            msg.setStatus(0);
+        } else {
+            msg.setResult("查找失败");
+            msg.setStatus(-1);
+        }
+        msg.setData(courier);
+        return JSONUtil.toJSON(msg);
+    }
+
+    @ResponseBody("/courier/update.do")
+    public String update(HttpServletRequest req, HttpServletResponse resp) {
+        String number = req.getParameter("number");
+        String couriername = req.getParameter("couriername");
+        String courierphone = req.getParameter("courierphone");
+        String idcard = req.getParameter("idcard");
+        String password = req.getParameter("password");
+        Courier courier = new Courier(number, couriername, courierphone, idcard, password);
+        Boolean flag = CourierService.update(courier);
+        Message msg = new Message();
+        if (flag) {
+            msg.setResult("修改成功");
+            msg.setStatus(0);
+        } else {
+            msg.setResult("修改失败");
+            msg.setStatus(-1);
+        }
+        return JSONUtil.toJSON(msg);
+
+    }
 }

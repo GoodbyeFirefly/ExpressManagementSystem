@@ -10,4 +10,8 @@ public interface BaseCourierDao {
     int gettotal();
 
     Boolean insert(Courier courier);
+
+    Courier findByPhone(String courierphone);
+
+    Boolean update(Courier courier);
 }

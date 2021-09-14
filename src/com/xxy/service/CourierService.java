@@ -19,4 +19,12 @@ public class CourierService {
     public static Boolean insert(Courier courier) {
         return dao.insert(courier);
     }
+
+    public static Courier findByPhone(String courierphone) {
+        return dao.findByPhone(courierphone);
+    }
+
+    public static Boolean update(Courier courier) {
+        return dao.update(courier);
+    }
 }
