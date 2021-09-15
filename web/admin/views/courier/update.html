@@ -14,7 +14,7 @@
 			<div class="content">
 				<table>	
 					<tr>
-						<td class="text-right">手机号码</td><td class="content_right"><input class="input inline-input" placeholder="请输入手机号码" id="couriernumber" pattern="(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$" title="请输入正确的手机号码"> <span class="btn btn-info" id="find">立即查找</span></td>
+						<td class="text-right">手机号码</td><td class="content_right"><input class="input inline-input" placeholder="请输入手机号码" id="couriernumber" type="text" > <span class="btn btn-info" id="find">立即查找</span></td>
 					</tr>
 				</table>
 			</div>
@@ -26,16 +26,16 @@
 			<div class="content">
 				<table>
 					<tr>
-						<td class="text-right">姓名</td><td class="content_right"><input class="input" placeholder="请输入姓名"></td>
+						<td class="text-right">姓名</td><td class="content_right"><input class="input" placeholder="请输入姓名" required type="text"></td>
 					</tr>
 					<tr>
-						<td class="text-right">手机号码</td><td class="content_right"><input class="input" placeholder="请输入手机号码" pattern="(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$" title="请输入正确的手机号码"></td>
+						<td class="text-right">手机号码</td><td class="content_right"><input class="input" placeholder="请输入手机号码" required type="text" title="请输入正确的手机号码"></td>
 					</tr>
 					<tr>
-						<td class="text-right">身份证号码</td><td class="content_right"><input class="input" placeholder="请输入身份证号码" pattern="^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$" title="请输入正确的身份证号码"></td>
+						<td class="text-right">身份证号码</td><td class="content_right"><input class="input" placeholder="请输入身份证号码" required type="text" title="请输入正确的身份证号码"></td>
 					</tr>
 					<tr>
-						<td class="text-right">密码</td><td class="content_right"><input class="input" placeholder="请输入密码"></td>
+						<td class="text-right">密码</td><td class="content_right"><input class="input" placeholder="请输入密码" required type="text"></td>
 					</tr>
 					<tr>
 						<td></td><td class="content_right"><span class="btn btn-info" id="update">立即修改</span>  </td>
@@ -48,44 +48,66 @@
 	<script src="/layer/layer.js"></script>
 	<script>
 		$(".header:eq(1),.content:eq(1)").hide();
+		var phone_regex = /(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$/;
+		var idcard_regex = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
 		var number = null;
 		$(function () {
 			$("#find").click(function () {
-				var windowId = layer.load();
 				var courierphone = $("#couriernumber").val();
-				$.getJSON("/courier/find.do", {courierphone:courierphone}, function (data) {
-					layer.close(windowId);
-					layer.msg(data.result);
-					if (data.status == 0) {
-					    number = data.data.number;
-						$(".header:eq(1),.content:eq(1)").fadeIn(1000);
-						$("input:eq(1)").val(data.data.couriername);
-						$("input:eq(2)").val(data.data.courierphone);
-						$("input:eq(3)").val(data.data.idcard);
-						$("input:eq(4)").val(data.data.password);
-					}
-				})
+				if (!courierphone)
+					layer.msg("输入不能为空");
+				else if (!phone_regex.test(courierphone))
+					layer.msg("请输入正确的手机号");
+				else {
+					var windowId = layer.load();
+					$.getJSON("/courier/find.do", {courierphone:courierphone}, function (data) {
+						layer.close(windowId);
+						layer.msg(data.result);
+						if (data.status == 0) {
+							number = data.data.number;
+							$(".header:eq(1),.content:eq(1)").fadeIn(1000);
+							$("input:eq(1)").val(data.data.couriername);
+							$("input:eq(2)").val(data.data.courierphone);
+							$("input:eq(3)").val(data.data.idcard);
+							$("input:eq(4)").val(data.data.password);
+						}
+					})
+				}
 			});
 		});
 		$("#update").click(function () {
-            var windowId = layer.load();
             var newCouriername = $("input:eq(1)").val();
             var newCourierphone = $("input:eq(2)").val();
             var newIdcard = $("input:eq(3)").val();
             var newPassword = $("input:eq(4)").val();
-            $.getJSON("/courier/update.do", {
-                number:number,
-                couriername:newCouriername,
-                courierphone:newCourierphone,
-                idcard:newIdcard,
-                password:newPassword
-            }, function (data) {
-                layer.close(windowId);
-                layer.msg(data.result);
-                if (data.status == 0) {
-                    $(".header:eq(1), .content:eq(1)").hide();
-                }
-            });
+            if (!newCouriername)
+            	layer.msg("姓名不能为空");
+            else if (!newCourierphone)
+            	layer.msg("号码不能为空");
+            else if (!phone_regex.test(newCourierphone))
+            	layer.msg("请输入正确的手机号码");
+            else if (!newIdcard)
+            	layer.msg("身份证号不能为空");
+            else if (!idcard_regex.test(newIdcard))
+            	layer.msg("请输入正确的身份证号");
+            else if (!newPassword)
+            	layer.msg("密码不能为空");
+            else {
+				var windowId = layer.load();
+				$.getJSON("/courier/update.do", {
+					number:number,
+					couriername:newCouriername,
+					courierphone:newCourierphone,
+					idcard:newIdcard,
+					password:newPassword
+				}, function (data) {
+					layer.close(windowId);
+					layer.msg(data.result);
+					if (data.status == 0) {
+						$(".header:eq(1), .content:eq(1)").hide();
+					}
+				});
+			}
         });
 	</script>
 </html>
