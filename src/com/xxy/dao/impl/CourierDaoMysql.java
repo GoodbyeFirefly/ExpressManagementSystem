@@ -15,7 +15,7 @@ public class CourierDaoMysql implements BaseCourierDao {
     public static final String SQL_INSERT = "INSERT INTO ECOURIER (NUMBER,COURIERNAME,COURIERPHONE,IDCARD,PASSWORD,COUNT,REGISTERTIME,LOGINTIME) VALUES(?,?,?,?,?,0,NOW(),NOW())";
     public static final String SQL_FIND_BY_PHONE = "SELECT * FROM ECOURIER WHERE COURIERPHONE=?";
     public static final String SQL_UPDATE = "UPDATE ECOURIER SET COURIERNAME=?,COURIERPHONE=?,IDCARD=?,PASSWORD=? WHERE NUMBER=?";
-//    public static final String SQL_FINDALL = "";
+    public static final String SQL_DELETE = "DELETE FROM ECOURIER WHERE NUMBER=?";
     //    public static final String SQL_FINDALL = "";
 
     //    public static final String SQL_FINDALL = "";
@@ -146,6 +146,23 @@ public class CourierDaoMysql implements BaseCourierDao {
             e.printStackTrace();
         } finally {
             DruidUtil.close(conn, statement, rs);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean delete(String number) {
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement(SQL_DELETE);
+            statement.setString(1, number);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            DruidUtil.close(conn, statement, null);
         }
         return false;
     }

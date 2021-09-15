@@ -27,4 +27,8 @@ public class CourierService {
     public static Boolean update(Courier courier) {
         return dao.update(courier);
     }
+
+    public static Boolean delete(String number) {
+        return dao.delete(number);
+    }
 }

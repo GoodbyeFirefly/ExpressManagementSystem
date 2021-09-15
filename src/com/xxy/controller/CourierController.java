@@ -90,6 +90,19 @@ public class CourierController {
             msg.setStatus(-1);
         }
         return JSONUtil.toJSON(msg);
-
+    }
+    @ResponseBody("/courier/delete.do")
+    public String delete(HttpServletRequest req, HttpServletResponse resp) {
+        String number = req.getParameter("number");
+        Boolean flag = CourierService.delete(number);
+        Message msg = new Message();
+        if (flag) {
+            msg.setStatus(0);
+            msg.setResult("删除成功");
+        } else {
+            msg.setStatus(-1);
+            msg.setResult("删除失败");
+        }
+        return JSONUtil.toJSON(msg);
     }
 }

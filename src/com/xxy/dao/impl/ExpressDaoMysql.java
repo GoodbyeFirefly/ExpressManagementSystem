@@ -436,7 +436,7 @@ public class ExpressDaoMysql implements BaseExpressDao {
         try {
             state = conn.prepareStatement(SQL_DELETE);
             state.setInt(1,id);
-            return state.executeUpdate()>0?true:false;
+            return state.executeUpdate()>0;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }finally {

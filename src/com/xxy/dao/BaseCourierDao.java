@@ -14,4 +14,6 @@ public interface BaseCourierDao {
     Courier findByPhone(String courierphone);
 
     Boolean update(Courier courier);
+
+    Boolean delete(String number);
 }

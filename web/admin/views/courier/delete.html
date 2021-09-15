@@ -14,7 +14,7 @@
 			<div class="content">
 				<table>	
 					<tr>
-						<td class="text-right">手机号码</td><td class="content_right"><input class="input inline-input" placeholder="请输入手机号码"> <span class="btn btn-info">立即查找</span></td>
+						<td class="text-right">手机号码</td><td class="content_right"><input class="input inline-input" placeholder="请输入手机号码"> <span class="btn btn-info" id="find">立即查找</span></td>
 					</tr>
 				</table>
 			</div>
@@ -38,10 +38,52 @@
 						<td class="text-right">密码</td><td class="content_right"><input class="input" placeholder="请输入姓名"></td>
 					</tr>
 					<tr>
-						<td></td><td class="content_right"><span class="btn btn-info">立即删除</span> <span class="btn">重置</span> </td>
+						<td></td><td class="content_right"><span class="btn btn-info" id="delete">立即删除</span> </td>
 					</tr>
 				</table>
 			</div>
 		</div>
 	</body>
+	<script src="/js/jquery2.1.4.js"></script>
+	<script src="/layer/layer.js"></script>
+	<script>
+		var phone_regex = /(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$/;
+		var number = null;
+		$(".header:eq(1),.content:eq(1)").hide();
+		$(function () {
+			$("#find").click(function () {
+				var courierphone = $("input:eq(0)").val();
+				if (!courierphone)
+					layer.msg("号码不能为空");
+				else if (!phone_regex.test(courierphone))
+					layer.msg("请输入正确的手机号码");
+				else {
+					var windowId = layer.load();
+					$.getJSON("/courier/find.do", {courierphone:courierphone}, function (data) {
+						layer.close(windowId);
+						layer.msg(data.result);
+						if (data.status == 0) {
+							number = data.data.number;
+							$(".header:eq(1),.content:eq(1)").fadeIn(1000);
+							$("input:eq(1)").val(data.data.couriername);
+							$("input:eq(2)").val(data.data.courierphone);
+							$("input:eq(3)").val(data.data.idcard);
+							$("input:eq(4)").val(data.data.password);
+							$("input:eq(1),input:eq(2),input:eq(3),input:eq(4)").prop("disabled", true);
+						}
+					})
+				}
+			});
+		});
+		$("#delete").click(function () {
+			var windowId = layer.load();
+			$.getJSON("/courier/delete.do", {number:number}, function (data) {
+				layer.close(windowId);
+				layer.msg(data.result);
+				if (data.status == 0) {
+					$(".header:eq(1),.content:eq(1)").hide();
+				}
+			})
+		});
+	</script>
 </html>
