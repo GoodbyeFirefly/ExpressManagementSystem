@@ -11,6 +11,21 @@ public class User {
     private Timestamp registertime;
     private Timestamp logintime;
 
+    public User(String username, String userphone, String idcard, String password) {
+        this.username = username;
+        this.userphone = userphone;
+        this.idcard = idcard;
+        this.password = password;
+    }
+
+    public User(int number, String username, String userphone, String idcard, String password) {
+        this.number = number;
+        this.username = username;
+        this.userphone = userphone;
+        this.idcard = idcard;
+        this.password = password;
+    }
+
     public User() {
     }
 

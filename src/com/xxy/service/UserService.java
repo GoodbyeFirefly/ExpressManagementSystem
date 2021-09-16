@@ -15,4 +15,20 @@ public class UserService {
     public static int getTotal() {
         return dao.getTotal();
     }
+
+    public static Boolean insert(User user) {
+        return dao.insert(user);
+    }
+
+    public static User findByPhone(String userphone) {
+        return dao.findByPhone(userphone);
+    }
+
+    public static Boolean update(User user) {
+        return dao.update(user);
+    }
+
+    public static Boolean delete(String number) {
+        return dao.delete(number);
+    }
 }
