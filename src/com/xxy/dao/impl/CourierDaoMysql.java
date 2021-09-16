@@ -55,7 +55,7 @@ public class CourierDaoMysql implements BaseCourierDao {
         } finally {
             DruidUtil.close(conn, statement, rs);
         }
-        System.out.println(list);
+//        System.out.println(list);
         return list;
     }
 
