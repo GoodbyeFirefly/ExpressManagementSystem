@@ -14,8 +14,8 @@ import java.util.Map;
 public class CourierDaoMysql implements BaseCourierDao {
     public static final String SQL_FIND_ALL = "SELECT * FROM ECOURIER";
     public static final String SQL_FIND_LIMIT = "SELECT * FROM ECOURIER LIMIT ?,?";
-    public static final String SQL_GET_TOTAL = "SELECT COUNT(ID) total FROM ECOURIER";
-    public static final String SQL_INSERT = "INSERT INTO ECOURIER (NUMBER,COURIERNAME,COURIERPHONE,IDCARD,PASSWORD,COUNT,REGISTERTIME,LOGINTIME) VALUES(?,?,?,?,?,0,NOW(),NOW())";
+    public static final String SQL_GET_TOTAL = "SELECT COUNT(NUMBER) total FROM ECOURIER";
+    public static final String SQL_INSERT = "INSERT INTO ECOURIER (COURIERNAME,COURIERPHONE,IDCARD,PASSWORD,COUNT,REGISTERTIME,LOGINTIME) VALUES(?,?,?,?,0,NOW(),NOW())";
     public static final String SQL_FIND_BY_PHONE = "SELECT * FROM ECOURIER WHERE COURIERPHONE=?";
     public static final String SQL_UPDATE = "UPDATE ECOURIER SET COURIERNAME=?,COURIERPHONE=?,IDCARD=?,PASSWORD=? WHERE NUMBER=?";
     public static final String SQL_DELETE = "DELETE FROM ECOURIER WHERE NUMBER=?";
@@ -41,8 +41,7 @@ public class CourierDaoMysql implements BaseCourierDao {
             }
             rs = statement.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String number = rs.getString("number");
+                int number = rs.getInt("number");
                 String couriername = rs.getString("couriername");
                 String courierphone = rs.getString("courierphone");
                 String idcard = rs.getString("idcard");
@@ -50,7 +49,7 @@ public class CourierDaoMysql implements BaseCourierDao {
                 int count = rs.getInt("count");
                 Timestamp registertime = rs.getTimestamp("registertime");
                 Timestamp logintime = rs.getTimestamp("logintime");
-                list.add(new Courier(id, number, couriername, courierphone, idcard, password, count, registertime, logintime));
+                list.add(new Courier(number, couriername, courierphone, idcard, password, count, registertime, logintime));
             }
 
         } catch (SQLException e) {
@@ -92,11 +91,10 @@ public class CourierDaoMysql implements BaseCourierDao {
         int total = 0;
         try {
             statement = conn.prepareStatement(SQL_INSERT);
-            statement.setString(1, courier.getNumber());
-            statement.setString(2, courier.getCouriername());
-            statement.setString(3, courier.getCourierphone());
-            statement.setString(4, courier.getIdcard());
-            statement.setString(5, courier.getPassword());
+            statement.setString(1, courier.getCouriername());
+            statement.setString(2, courier.getCourierphone());
+            statement.setString(3, courier.getIdcard());
+            statement.setString(4, courier.getPassword());
             return statement.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -117,7 +115,7 @@ public class CourierDaoMysql implements BaseCourierDao {
             statement.setString(1, courierphone);
             rs = statement.executeQuery();
             if (rs.next()) {
-                String number = rs.getString("number");
+                int number = rs.getInt("number");
                 String couriername = rs.getString("couriername");
                 String courierphone1 = rs.getString("courierphone");
                 String idcard = rs.getString("idcard");
@@ -143,7 +141,7 @@ public class CourierDaoMysql implements BaseCourierDao {
             statement.setString(2, courier.getCourierphone());
             statement.setString(3, courier.getIdcard());
             statement.setString(4, courier.getPassword());
-            statement.setString(5, courier.getNumber());
+            statement.setString(5, Integer.toString(courier.getNumber()));
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

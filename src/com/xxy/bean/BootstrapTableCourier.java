@@ -1,8 +1,7 @@
 package com.xxy.bean;
 
 public class BootstrapTableCourier {
-    private int id;
-    private String number;
+    private int number;
     private String couriername;
     private String courierphone;
     private String idcard;
@@ -14,8 +13,7 @@ public class BootstrapTableCourier {
     public BootstrapTableCourier() {
     }
 
-    public BootstrapTableCourier(int id, String number, String couriername, String courierphone, String idcard, String password, int count, String registertime, String logintime) {
-        this.id = id;
+    public BootstrapTableCourier(int number, String couriername, String courierphone, String idcard, String password, int count, String registertime, String logintime) {
         this.number = number;
         this.couriername = couriername;
         this.courierphone = courierphone;
@@ -27,18 +25,10 @@ public class BootstrapTableCourier {
     }
 
     public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setId(int number) {
         this.number = number;
     }
 

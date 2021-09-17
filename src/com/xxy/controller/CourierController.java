@@ -26,7 +26,7 @@ public class CourierController {
         for (Courier c : list) {
             String regiterTime = DateFormatUtil.format(c.getRegistertime());
             String loginTime = DateFormatUtil.format(c.getLogintime());
-            list2.add(new BootstrapTableCourier(c.getId(), c.getNumber(), c.getCouriername(), c.getCourierphone(), c.getIdcard(), c.getPassword(), c.getCount(), regiterTime, loginTime));
+            list2.add(new BootstrapTableCourier(c.getNumber(), c.getCouriername(), c.getCourierphone(), c.getIdcard(), c.getPassword(), c.getCount(), regiterTime, loginTime));
         }
         int total = CourierService.gettotal();
         ResultData<BootstrapTableCourier> data = new ResultData<>();
@@ -42,8 +42,8 @@ public class CourierController {
         String idcard = req.getParameter("idcard");
         String password = req.getParameter("password");
 
-        int total = 100000 + CourierService.gettotal();
-        Courier courier = new Courier(String.valueOf(total), couriername, courierphone, idcard, password);
+        int total = CourierService.gettotal();
+        Courier courier = new Courier(total, couriername, courierphone, idcard, password);
         Boolean flag = CourierService.insert(courier);
         Message msg = new Message();
         if (flag) {
@@ -74,7 +74,7 @@ public class CourierController {
 
     @ResponseBody("/courier/update.do")
     public String update(HttpServletRequest req, HttpServletResponse resp) {
-        String number = req.getParameter("number");
+        int number = Integer.parseInt(req.getParameter("number"));
         String couriername = req.getParameter("couriername");
         String courierphone = req.getParameter("courierphone");
         String idcard = req.getParameter("idcard");

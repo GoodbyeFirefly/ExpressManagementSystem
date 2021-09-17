@@ -4,8 +4,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 public class Courier {
-    private int id;
-    private String number;
+    private int number;
     private String couriername;
     private String courierphone;
     private String idcard;
@@ -17,7 +16,7 @@ public class Courier {
     public Courier() {
     }
 
-    public Courier(String number, String couriername, String courierphone, String idcard, String password) {
+    public Courier(int number, String couriername, String courierphone, String idcard, String password) {
         this.number = number;
         this.couriername = couriername;
         this.courierphone = courierphone;
@@ -25,8 +24,7 @@ public class Courier {
         this.password = password;
     }
 
-    public Courier(int id, String number, String couriername, String courierphone, String idcard, String password, int count, Timestamp registertime, Timestamp logintime) {
-        this.id = id;
+    public Courier(int number, String couriername, String courierphone, String idcard, String password, int count, Timestamp registertime, Timestamp logintime) {
         this.number = number;
         this.couriername = couriername;
         this.courierphone = courierphone;
@@ -37,19 +35,11 @@ public class Courier {
         this.logintime = logintime;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
@@ -108,8 +98,7 @@ public class Courier {
     @Override
     public String toString() {
         return "Courier{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
+                "number='" + number + '\'' +
                 ", couriername='" + couriername + '\'' +
                 ", courierphone='" + courierphone + '\'' +
                 ", idcard='" + idcard + '\'' +
@@ -129,9 +118,8 @@ public class Courier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Courier courier = (Courier) o;
-        return id == courier.id &&
+        return number == courier.number &&
                 count == courier.count &&
-                Objects.equals(number, courier.number) &&
                 Objects.equals(couriername, courier.couriername) &&
                 Objects.equals(courierphone, courier.courierphone) &&
                 Objects.equals(idcard, courier.idcard) &&
@@ -142,6 +130,6 @@ public class Courier {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, number, couriername, courierphone, idcard, password, count, registertime, logintime);
+        return Objects.hash(number, couriername, courierphone, idcard, password, count, registertime, logintime);
     }
 }
