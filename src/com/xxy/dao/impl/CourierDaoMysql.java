@@ -4,9 +4,12 @@ import com.xxy.bean.Courier;
 import com.xxy.dao.BaseCourierDao;
 import com.xxy.util.DruidUtil;
 
+import javax.print.attribute.standard.RequestingUserName;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CourierDaoMysql implements BaseCourierDao {
     public static final String SQL_FIND_ALL = "SELECT * FROM ECOURIER";
@@ -16,7 +19,7 @@ public class CourierDaoMysql implements BaseCourierDao {
     public static final String SQL_FIND_BY_PHONE = "SELECT * FROM ECOURIER WHERE COURIERPHONE=?";
     public static final String SQL_UPDATE = "UPDATE ECOURIER SET COURIERNAME=?,COURIERPHONE=?,IDCARD=?,PASSWORD=? WHERE NUMBER=?";
     public static final String SQL_DELETE = "DELETE FROM ECOURIER WHERE NUMBER=?";
-    //    public static final String SQL_FINDALL = "";
+    public static final String SQL_CONSOLE = "SELECT COUNT(NUMBER) courier_size, COUNT((TO_DAYS(REGISTERTIME)=TO_DAYS(NOW())) OR NULL) courier_day FROM ECOURIER";
 
     //    public static final String SQL_FINDALL = "";
 
@@ -165,5 +168,28 @@ public class CourierDaoMysql implements BaseCourierDao {
             DruidUtil.close(conn, statement, null);
         }
         return false;
+    }
+
+    @Override
+    public Map<String, Integer> console() {
+        Map<String, Integer> data = new HashMap<>();
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = conn.prepareStatement(SQL_CONSOLE);
+            rs = statement.executeQuery();
+            if (rs.next()) {
+                int courier_size = rs.getInt("courier_size");
+                int courier_day = rs.getInt("courier_day");
+                data.put("courier_size", courier_size);
+                data.put("courier_day", courier_day);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(conn, statement, rs);
+        }
+        return data;
     }
 }

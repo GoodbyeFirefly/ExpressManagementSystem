@@ -5,6 +5,7 @@ import com.xxy.dao.BaseCourierDao;
 import com.xxy.dao.impl.CourierDaoMysql;
 
 import java.util.List;
+import java.util.Map;
 
 public class CourierService {
     private static BaseCourierDao dao = new CourierDaoMysql();
@@ -30,5 +31,9 @@ public class CourierService {
 
     public static Boolean delete(String number) {
         return dao.delete(number);
+    }
+
+    public static Map<String, Integer> console() {
+        return dao.console();
     }
 }

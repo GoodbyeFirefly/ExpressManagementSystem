@@ -20,7 +20,7 @@
                                 <div class="meta">
                                     <span>用户人数</span>
                                 </div>
-                                <div class="total">6666</div>
+                                <div class="total" id="user_size">-</div>
                             </div>
                         </div>
                         <div class="chart-body">
@@ -30,7 +30,7 @@
                         <div class="chart-footer">
                             <div class="field">
                                 <span>日注册量</span>
-                                <span>666</span>
+                                <span id="user_day">-</span>
                             </div>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                                 <div class="meta">
                                     <span>快递员人数</span>
                                 </div>
-                                <div class="total">888</div>
+                                <div class="total" id="courier_size">-</div>
                             </div>
                         </div>
                         <div class="chart-body">
@@ -54,7 +54,7 @@
                         <div class="chart-footer">
                             <div class="field">
                                 <span>日注册量</span>
-                                <span>88</span>
+                                <span id="courier_day">-</span>
                             </div>
                         </div>
                     </div>
@@ -131,13 +131,17 @@
     </script>
     <script>
         $(function () {
-            $.post("/express/console.do", null, function (data) {
+            $.post("/admin/console.do", null, function (data) {
                 if (data.status == 0) {
                     // [{size:总数,day:新增},{size:总数,day:新增}]
                     $("#data1_size").html(data.data[0].data1_size);
                     $("#data1_day").html(data.data[0].data1_day);
                     $("#data2_size").html(data.data[1].data2_size);
                     $("#data2_day").html(data.data[1].data2_day);
+                    $("#user_size").html(data.data[2].user_size);
+                    $("#user_day").html(data.data[2].user_day);
+                    $("#courier_size").html(data.data[3].courier_size);
+                    $("#courier_day").html(data.data[3].courier_day);
                 }
             }, "JSON");
         });

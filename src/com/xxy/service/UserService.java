@@ -5,6 +5,7 @@ import com.xxy.dao.BaseUserDao;
 import com.xxy.dao.impl.UserDaoMysql;
 
 import java.util.List;
+import java.util.Map;
 
 public class UserService {
     private static BaseUserDao dao = new UserDaoMysql();
@@ -30,5 +31,9 @@ public class UserService {
 
     public static Boolean delete(String number) {
         return dao.delete(number);
+    }
+
+    public static Map<String, Integer> console() {
+        return dao.console();
     }
 }

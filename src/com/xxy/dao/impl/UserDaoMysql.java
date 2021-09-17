@@ -6,7 +6,9 @@ import com.xxy.util.DruidUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserDaoMysql implements BaseUserDao {
     public static final String SQL_FIND_ALL = "SELECT * FROM EUSER";
@@ -16,7 +18,9 @@ public class UserDaoMysql implements BaseUserDao {
     public static final String SQL_FIND_BY_PHONE = "SELECT * FROM EUSER WHERE USERPHONE=?";
     public static final String SQL_UPDATE = "UPDATE EUSER SET USERNAME=?,USERPHONE=?,IDCARD=?,PASSWORD=? WHERE NUMBER=?";
     public static final String SQL_DELETE = "DELETE FROM EUSER WHERE NUMBER=?";
-//    public static final String SQL_FIND_ALL = "";
+    public static final String SQL_CONSOLE = "SELECT COUNT(NUMBER) user_size, COUNT((TO_DAYS(REGISTERTIME)=TO_DAYS(NOW())) OR NULL) user_day FROM EUSER";
+
+    //    public static final String SQL_FIND_ALL = "";
 
 
 
@@ -158,5 +162,28 @@ public class UserDaoMysql implements BaseUserDao {
             DruidUtil.close(conn, statement, rs);
         }
         return false;
+    }
+
+    @Override
+    public Map<String, Integer> console() {
+        Map<String, Integer> data = new HashMap<>();
+        Connection conn = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = conn.prepareStatement(SQL_CONSOLE);
+            rs = statement.executeQuery();
+            if (rs.next()) {
+                int user_size = rs.getInt("user_size");
+                int user_day = rs.getInt("user_day");
+                data.put("user_size", user_size);
+                data.put("user_day", user_day);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(conn, statement, rs);
+        }
+        return data;
     }
 }
