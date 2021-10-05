@@ -10,6 +10,7 @@ public class User {
     private String password;
     private Timestamp registertime;
     private Timestamp logintime;
+    private Boolean isUser;// 判断是否为user
 
     public User(String username, String userphone, String idcard, String password) {
         this.username = username;
@@ -94,4 +95,13 @@ public class User {
     public void setLogintime(Timestamp logintime) {
         this.logintime = logintime;
     }
+
+    public Boolean getUser() {
+        return isUser;
+    }
+
+    public void setUser(Boolean user) {
+        isUser = user;
+    }
+
 }
