@@ -2,7 +2,7 @@ package com.xxy.bean;
 
 import java.sql.Timestamp;
 
-public class BootsrapTableExpress {
+public class BootstrapTableExpress {
     private int id;
     private String number;
     private String username;
@@ -13,12 +13,12 @@ public class BootsrapTableExpress {
     private String outtime;
     private String status;
 
-    public BootsrapTableExpress() {
+    public BootstrapTableExpress() {
     }
 
     private String sysPhone;
 
-    public BootsrapTableExpress(int id, String number, String username, String userphone, String company, String code, String intime, String outtime, String status, String sysPhone) {
+    public BootstrapTableExpress(int id, String number, String username, String userphone, String company, String code, String intime, String outtime, String status, String sysPhone) {
         this.id = id;
         this.number = number;
         this.username = username;

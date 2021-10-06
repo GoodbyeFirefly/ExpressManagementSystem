@@ -1,6 +1,6 @@
 package com.xxy.controller;
 
-import com.xxy.bean.BootsrapTableExpress;
+import com.xxy.bean.BootstrapTableExpress;
 import com.xxy.bean.Express;
 import com.xxy.bean.Message;
 import com.xxy.bean.ResultData;
@@ -42,20 +42,20 @@ public class ExpressController {
 
         // 3，进行查询
         List<Express> list = ExpressService.findAll(true, offset, pageNumber);
-        List<BootsrapTableExpress> list2 = new ArrayList<>();
+        List<BootstrapTableExpress> list2 = new ArrayList<>();
         for (Express e : list) {
             String inTime = DateFormatUtil.format(e.getIntime());
             String outTime = e.getOuttime() == null ? "未出库" : DateFormatUtil.format(e.getOuttime());
             String status = e.getStatus() == 0 ? "待取件" : "已取件";
             String code = e.getCode() == null ? "已取件" : e.getCode();
-            list2.add(new BootsrapTableExpress(e.getId(), e.getNumber(), e.getUsername(), e.getUserphone(), e.getCompany(), code, inTime, outTime, status, e.getSysPhone()));
+            list2.add(new BootstrapTableExpress(e.getId(), e.getNumber(), e.getUsername(), e.getUserphone(), e.getCompany(), code, inTime, outTime, status, e.getSysPhone()));
 
         }
         List<Map<String, Integer>> console = ExpressService.console();
         Integer total = console.get(0).get("data1_size");
 
         // 4，将集合封装为bootstrap-table识别的格式(用于前后端分离)
-        ResultData<BootsrapTableExpress> data = new ResultData<>();
+        ResultData<BootstrapTableExpress> data = new ResultData<>();
         data.setRows(list2);
         data.setTotal(total);
         String json = JSONUtil.toJSON(data);

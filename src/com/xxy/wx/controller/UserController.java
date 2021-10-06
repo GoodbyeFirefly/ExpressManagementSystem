@@ -1,4 +1,4 @@
-package com.xxy.wx;
+package com.xxy.wx.controller;
 
 import com.xxy.bean.Message;
 import com.xxy.bean.User;
