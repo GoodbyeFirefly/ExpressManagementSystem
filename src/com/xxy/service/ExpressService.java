@@ -137,4 +137,8 @@ public class ExpressService {
     public static boolean delete(int id) {
         return dao.delete(id);
     }
+
+    public static List<Express> findByUserPhoneAndStatus(String userPhone, int status) {
+        return dao.findByUserPhoneAndStatus(userPhone, status);
+    }
 }

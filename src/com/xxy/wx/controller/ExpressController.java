@@ -75,4 +75,66 @@ public class ExpressController {
         return JSONUtil.toJSON(msg);
     }
 
+    @ResponseBody(("/wx/UserExpress.do"))
+    public String userList(HttpServletRequest request, HttpServletResponse response) {
+        String userPhone = request.getParameter("userPhone");
+        List<Express> list = ExpressService.findByUserPhoneAndStatus(userPhone, 0);
+        List<BootstrapTableExpress> list2 = new ArrayList<>();
+        for(Express e:list){
+            String inTime = DateFormatUtil.format(e.getIntime());
+            String outTime = e.getOuttime()==null?"未出库":DateFormatUtil.format(e.getOuttime());
+            String status = e.getStatus()==0?"待取件":"已取件";
+            String code = e.getCode()==null?"已取件":e.getCode();
+            BootstrapTableExpress e2 = new BootstrapTableExpress(e.getId(),e.getNumber(),e.getUsername(),e.getUserphone(),e.getCompany(),code,inTime,outTime,status,e.getSysPhone());
+            list2.add(e2);
+        }
+        Message msg = new Message();
+        if (list.size() == 0) {
+            msg.setStatus(-1);
+            msg.setResult("未查询到快递");
+        } else {
+            msg.setStatus(0);
+            msg.setResult("查询成功");
+            msg.setData(list2);
+        }
+        return JSONUtil.toJSON(msg);
+    }
+
+    @ResponseBody("/wx/updateStatus.do")
+    public String updateExpressStatus(HttpServletRequest request,HttpServletResponse response){
+        String code = request.getParameter("code");
+        boolean flag = ExpressService.updateStatus(code);
+        Message msg = new Message();
+        if(flag){
+            msg.setStatus(0);
+            msg.setResult("取件成功");
+        }else{
+            msg.setStatus(-1);
+            msg.setResult("取件码不存在,请用户更新二维码");
+        }
+        String json = JSONUtil.toJSON(msg);
+        return json;
+    }
+
+    @ResponseBody("/wx/findExpressByCode.do")
+    public String findExpressByCode(HttpServletRequest request, HttpServletResponse response) {
+        String code = request.getParameter("code");
+        Express e = ExpressService.findByCode(code);
+        BootstrapTableExpress e2 =null;
+        if(e!=null){
+            e2 = new BootstrapTableExpress(e.getId(), e.getNumber(), e.getUsername()
+                    , e.getUserphone(), e.getCompany(), e.getCode(),
+                    DateFormatUtil.format(e.getIntime()), e.getOuttime()==null?"未出库":DateFormatUtil.format(e.getOuttime()),e.getStatus()==0?"待取件":"已取件", e.getSysPhone());
+        }
+        Message msg = new Message();
+        if (e == null) {
+            msg.setStatus(-1);
+            msg.setResult("取件码不存在");
+        } else {
+            msg.setStatus(0);
+            msg.setResult("查询成功");
+            msg.setData(e2);
+        }
+        return JSONUtil.toJSON(msg);
+    }
 }

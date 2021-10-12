@@ -79,4 +79,6 @@ public interface BaseExpressDao {
      * @return 删除的结果，true表示成功，false表示失败
      */
     boolean delete(int id);
+
+    List<Express> findByUserPhoneAndStatus(String userPhone, int status);
 }
