@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter({"/index.html"})
+@WebFilter({"/index.html", "/addExpress.html", "/expressAssist.html", "/lazyboard.html", "/personQRcode.html", "/pickExpress.html", "/userCheckStart.html", "/wxIdCardUserInfoModify.html","/wxUserhome.html"})
 public class UserFilter implements Filter {
     public void destroy() {
     }
