@@ -1,10 +1,12 @@
 package com.xxy.wx.controller;
 
 import com.xxy.bean.Courier;
+import com.xxy.bean.Express;
 import com.xxy.bean.Message;
 import com.xxy.bean.User;
 import com.xxy.mvc.ResponseBody;
 import com.xxy.service.CourierService;
+import com.xxy.service.ExpressService;
 import com.xxy.service.UserService;
 import com.xxy.util.JSONUtil;
 import com.xxy.util.RandomUtil;
@@ -119,5 +121,43 @@ public class UserController {
         return JSONUtil.toJSON(msg);
     }
 
+    @ResponseBody("/wx/findExpressByNum.do")
+    public String findExpressByNum(HttpServletRequest request, HttpServletResponse response) {
+        User user = UserUtil.getWxUser(request.getSession());
+        Boolean isUser = user.getUser();
+        String expressNum = request.getParameter("expressNum");
+        Express express = ExpressService.findByNumber(expressNum);
+        Message msg = new Message();
+        if (express == null) {
+            msg.setStatus(-1);
+            msg.setResult("快递单号不存在");
+            return JSONUtil.toJSON(msg);
+        }
+        String expressMsg = "姓名：" + express.getUsername() + "； " +
+                "手机号：" + express.getUserphone() + "； " +
+                "公司：" + express.getCompany() + "； " +
+                "取件码：" + express.getCode() + "； " +
+                "状态：" + (express.getStatus() == 0 ? "未出库" : "已出库");
+
+        if (isUser) {
+            // 用户查询
+            if (express.getUserphone().equals(user.getUserphone())) {
+                // 快递是该用户的
+                msg.setStatus(0);
+                msg.setResult("查询成功");
+                msg.setData(expressMsg);
+            } else {
+                // 快递不是该用户的
+                msg.setStatus(-2);
+                msg.setResult("该快递不属于此用户");
+            }
+        } else {
+            // 快递员查询
+            msg.setStatus(0);
+            msg.setResult("查询成功");
+            msg.setData(expressMsg);
+        }
+        return JSONUtil.toJSON(msg);
+    }
 
 }

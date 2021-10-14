@@ -22,7 +22,7 @@
 			<form id="theForm">
 				<div class="forminput">
 					<input type="text" id="expressNum" name="expressNum" placeholder="请输入快递单号...">
-					<input id="PageContext" type="hidden" value="${pageContext.request.contextPath}" />
+					<!--<input id="PageContext" type="hidden" value="${pageContext.request.contextPath}" />-->
 					<div class="submBtn"></div>
 				</div>
 			</form>
@@ -57,7 +57,7 @@
 		</div>
 	
 		<div class="footer">
-			<p class="copytxt">&copy;新职课版权所有</p>
+			<p class="copytxt">&copy;xxx版权所有</p>
 		</div>
 	</div>
 
@@ -141,24 +141,16 @@
 		//submit arrow
 		$(".submBtn").click(function(){
 			var expressNum = $("#expressNum").val();//快递单号
-			 $.ajax({
-				    type:'GET',
-				    url:pageContextVal+'/ul/indexQueryExpress',
-				    data:{'expressNum':expressNum},
-				    dataType: "json",
-				    success:function(data){
-				    	var jsontmp = data;
-						switch(jsontmp.code) {
-							case "1" : rzAlert("操作提示",jsontmp.message); break;
-							case "0" : 
-								rzAlert("操作提示",jsontmp.message);
-								break;
-						}
-				    },
-				    error:function(){
-				      
-				    }
+			var windowId = layer.load();
+			$.get("/wx/findExpressByNum.do", {expressNum:expressNum}, function (data) {
+				layer.close(windowId);
+				var message = data.data;
+				layer.alert(message, {
+					icon: 0,
+					title: "快件信息"
 				});
+			});
+
 		});
 	});
 	</script>
