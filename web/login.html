@@ -103,6 +103,9 @@
             layer.close(windowId);
             if (data.status == 0 || data.status == 1) {
                 window.location.href = "index.html";
+            } else if (data.status == -3) {
+                layer.msg(data.result)
+                window.location.href = "register.html";
             }
             layer.msg(data.result);
         }, "JSON");

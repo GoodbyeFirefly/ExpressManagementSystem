@@ -16,6 +16,13 @@ public class Courier {
     public Courier() {
     }
 
+    public Courier(String couriername, String courierphone, String idcard, String password) {
+        this.couriername = couriername;
+        this.courierphone = courierphone;
+        this.idcard = idcard;
+        this.password = password;
+    }
+
     public Courier(int number, String couriername, String courierphone, String idcard, String password) {
         this.number = number;
         this.couriername = couriername;

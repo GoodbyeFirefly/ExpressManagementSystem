@@ -1,5 +1,6 @@
 package com.xxy.wx.controller;
 
+import com.xxy.bean.Courier;
 import com.xxy.bean.Message;
 import com.xxy.bean.User;
 import com.xxy.mvc.ResponseBody;
@@ -50,10 +51,15 @@ public class UserController {
                 // 快递员登录（包含普通用户的权限）
                 msg.setStatus(1);
                 user.setUser(false);// 这是新添加的属性，用于判断该手机号是用户还是快递员
-            } else {
+            } else if (UserService.findByPhone(userPhone) != null) {
                 // 普通用户登录
                 msg.setStatus(0);
                 user.setUser(true);
+            } else {
+                // 用户不存在
+                msg.setStatus(-3);
+                msg.setResult("该用户不存在，正在前往注册页面");
+                return JSONUtil.toJSON(msg);
             }
 
             UserUtil.setWxUser(request.getSession(), user);// 将手机号和验证码的对应信息存入session
@@ -85,4 +91,33 @@ public class UserController {
         msg.setResult(user.getUserphone());
         return JSONUtil.toJSON(msg);
     }
+
+    @ResponseBody("/wx/register.do")
+    public String register(HttpServletRequest request, HttpServletResponse response) {
+        String role = request.getParameter("role");
+        String name = request.getParameter("name");
+        String phone = request.getParameter("phone");
+        String idcard = request.getParameter("idcard");
+        String password = request.getParameter("password");
+        System.out.println(role);
+        Message msg = new Message();
+        if ("1".equals(role)) {
+            // 注册为用户
+            msg.setStatus(1);
+            UserService.insert(new User(name, phone, idcard, password));
+            msg.setResult("用户注册成功");
+        } else if ("0".equals(role)) {
+            // 注册为快递员
+            msg.setStatus(0);
+            CourierService.insert(new Courier(name, phone, idcard, password));
+            msg.setResult("快递员注册成功");
+        } else {
+            // 验证码不一致，登录失败
+            msg.setStatus(-1);
+            msg.setResult("无法判断类型，注册失败");
+        }
+        return JSONUtil.toJSON(msg);
+    }
+
+
 }
