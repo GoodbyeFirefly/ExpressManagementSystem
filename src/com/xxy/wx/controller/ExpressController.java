@@ -137,4 +137,25 @@ public class ExpressController {
         }
         return JSONUtil.toJSON(msg);
     }
+
+    @ResponseBody("/wx/insertExpress.do")
+    public String insertExpress(HttpServletRequest request, HttpServletResponse response) {
+        String number = request.getParameter("number");
+        String company = request.getParameter("company");
+        String username = request.getParameter("username");
+        String userphone = request.getParameter("userphone");
+        boolean insert = ExpressService.insert(new Express(number, username, userphone, company, UserUtil.getUserphone(request.getSession())));
+        Message msg = new Message();
+        if (insert) {
+            msg.setStatus(0);
+            msg.setResult("快递录入成功");
+        } else {
+            msg.setStatus(-1);
+            msg.setResult("快递录入失败");
+        }
+
+        return JSONUtil.toJSON(msg);
+    }
+
+
 }
