@@ -7,6 +7,7 @@
 	<link href="css/normalize.css" type="text/css" rel="stylesheet" />
 	<link href="css/common.css" type="text/css" rel="stylesheet" />
 	<script src="js/jquery.min.js" type="text/javascript"></script>
+	<script src="layer/layer.js"></script>
 	<script src="js/notice.js" type="text/javascript"></script>
 	<script src="js/common.js" type="text/javascript"></script>
 	<script src="js/regexp.js" type="text/javascript"></script>
@@ -201,29 +202,81 @@
 		<div class="nickName">用户姓名</div>
 
 		<form>
-			<input id="PageContext" type="hidden" value="${pageContext.request.contextPath}" />
-			<input id="wxCode" type="hidden" value="${wxCode}" />
-			<input type="hidden" id="userId" name="userId" value="${sysWxUser.id}">
+			<!--<input id="PageContext" type="hidden" value="${pageContext.request.contextPath}" />-->
+			<!--<input id="wxCode" type="hidden" value="${wxCode}" />-->
+			<!--<input type="hidden" id="userId" name="userId" value="${sysWxUser.id}">-->
 			<div class="userInputCont">
 				<div class="inputTypeCont">
-					<div class="inputTitle">新的名称</div>
-					<input type="text" class="commonInput" name="name" id="name" placeholder="请输入真实姓名..." disabled>
+					<div class="inputTitle">昵称</div>
+					<input type="text" class="commonInput" name="name" id="name" placeholder="请输入真实姓名..." required>
 				</div>
 				<div class="inputTypeCont">
-					<div class="inputTitle">新的手机</div>
-					<input type="text" class="commonInputFunc userOldPhone" id="usernum" name="usernum" placeholder="请输入新手机号码" disabled>
+					<div class="inputTitle">手机</div>
+					<input type="text" class="commonInputFunc userOldPhone" id="phone" name="usernum" placeholder="请输入新手机号码" required>
 					<div class="commonFuncBtnModify userModifyPhone"></div>
 				</div>
 				<div class="inputTypeCont">
 					<div class="inputTitle">短信</div>
-					<input type="text" class="verifiInput" id="username" name="username" placeholder="请输入验证码...">
-					<input type="button" class="verifiBtn" value="发送验证码">
+					<input type="text" class="verifiInput" id="code" name="username" placeholder="请输入验证码..." required>
+					<input type="button" id="btnSendCode1" class="verifiBtn" onclick="sendMessage()" value="发送验证码">
 				</div>
 			</div>
+			<div class="submitBtn" onclick="update()">修改信息</div>
 		</form>
 
-		<div class="submitBtn">修改信息</div>
+
 	</div>
 </div>
+<script>
+	var phone_regex = /(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$/;
+	function SetRemainTime1() {
+		if (curCount1 == 0) {
+			window.clearInterval(InterValObj1);
+			$("#btnSendCode1").removeAttr("disabled");
+			$("#btnSendCode1").val("重新发送");
+		}
+		else {
+			curCount1--;
+			$("#btnSendCode1").val( + curCount1 + "秒再获取");
+		}
+	}
+	function sendMessage() {
+		curCount1 = 60;
+		var phone = $.trim($('#phone').val());
+		if (!phone_regex.test(phone)) {
+			alert(" 请输入有效的手机号码");
+			return false;
+		}
+
+		$("#btnSendCode1").attr("disabled", "true");
+		$("#btnSendCode1").val( + curCount1 + "秒再获取");
+		InterValObj1 = window.setInterval(SetRemainTime1, 1000);
+		var windowId = layer.load();
+		// 发送短信
+		$.get("/wx/loginSms.do", {userPhone:phone}, function (data) {
+			layer.close(windowId);
+			layer.msg(data.result);
+		});
+
+	}
+	function update() {
+		var name = $("#name").val();
+		var phone = $("#phone").val();
+		var code = $("#code").val();
+		if (!name)
+			layer.msg("姓名不能为空");
+		else if (!phone)
+			layer.msg("号码不能为空");
+		else if (!phone_regex.test(phone))
+			layer.msg("请输入正确的手机号码");
+		else if (!code)
+			layer.msg("验证码不能为空");
+		else {
+			$.getJSON("/wx/updateInfoByPhone.do", {name:name, phone:phone, code:code}, function (data) {
+				layer.msg(data.result);
+			})
+		}
+	}
+</script>
 </body>
 </html>

@@ -160,4 +160,74 @@ public class UserController {
         return JSONUtil.toJSON(msg);
     }
 
+    @ResponseBody("/wx/getUsername.do")
+    public String getUsername(HttpServletRequest request, HttpServletResponse response) {
+        User wxUser = UserUtil.getWxUser(request.getSession());
+        Message msg = new Message();
+        if (null == wxUser.getUserphone()) {
+            msg.setStatus(-1);
+            msg.setData("--");
+        } else {
+            msg.setStatus(0);
+            if (wxUser.getUsername() == null) {
+                if (wxUser.getUser()) {
+                    User user = UserService.findByPhone(wxUser.getUserphone());
+                    msg.setData(user.getUsername());
+                } else {
+                    Courier courier = CourierService.findByPhone(wxUser.getUserphone());
+                    msg.setData(courier.getCouriername());
+                }
+            } else {
+                msg.setData(wxUser.getUsername());
+            }
+        }
+        return JSONUtil.toJSON(msg);
+    }
+
+    @ResponseBody("/wx/updateInfoByPhone.do")
+    public String updateInfoByPhone(HttpServletRequest request, HttpServletResponse response) {
+        String name = request.getParameter("name");
+        String phone = request.getParameter("phone");
+        String code = request.getParameter("code");
+        String sysCode = UserUtil.getLoginSms(request.getSession(), phone);
+        User wxUser = UserUtil.getWxUser(request.getSession());
+        Message msg = new Message();
+        if (sysCode == null) {
+            // 该手机号未获取短信
+            msg.setStatus(-1);
+            msg.setResult("该手机号码未获取短信");
+        } else if (!sysCode.equals(code)) {
+            msg.setStatus(-2);
+            msg.setResult("验证码输入有误");
+        } else {
+            Boolean isUser = wxUser.getUser();
+            boolean flag = false;
+            if (isUser) {
+                User newUser = UserService.findByPhone(wxUser.getUserphone());
+                newUser.setUsername(name);// 修改用户名
+                newUser.setUserphone(phone);// 修改手机号
+                UserUtil.setWxUser(request.getSession(), newUser);
+                flag = UserService.update(newUser);
+            } else {
+                Courier newCourier = CourierService.findByPhone(wxUser.getUserphone());
+                newCourier.setCouriername(name);
+                newCourier.setCourierphone(phone);
+                User user = new User();
+                user.setUsername(name);
+                user.setUserphone(phone);
+                UserUtil.setWxUser(request.getSession(), user);
+                flag = CourierService.update(newCourier);
+            }
+
+            if (flag) {
+                msg.setStatus(0);
+                msg.setResult("信息修改成功");
+            } else {
+                msg.setStatus(-3);
+                msg.setResult("信息修改失败");
+            }
+        }
+        return JSONUtil.toJSON(msg);
+    }
+
 }
