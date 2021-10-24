@@ -216,6 +216,11 @@
 					<div class="commonFuncBtnModify userModifyPhone"></div>
 				</div>
 				<div class="inputTypeCont">
+					<div class="inputTitle">密码</div>
+					<input type="password" class="commonInputFunc userOldPhone" id="password" name="usernum" placeholder="请输入新密码" required>
+					<div class="commonFuncBtnModify userModifyPhone"></div>
+				</div>
+				<div class="inputTypeCont">
 					<div class="inputTitle">短信</div>
 					<input type="text" class="verifiInput" id="code" name="username" placeholder="请输入验证码..." required>
 					<input type="button" id="btnSendCode1" class="verifiBtn" onclick="sendMessage()" value="发送验证码">
@@ -262,6 +267,7 @@
 	function update() {
 		var name = $("#name").val();
 		var phone = $("#phone").val();
+		var password = $("#password").val();
 		var code = $("#code").val();
 		if (!name)
 			layer.msg("姓名不能为空");
@@ -272,7 +278,7 @@
 		else if (!code)
 			layer.msg("验证码不能为空");
 		else {
-			$.getJSON("/wx/updateInfoByPhone.do", {name:name, phone:phone, code:code}, function (data) {
+			$.getJSON("/wx/updateInfoByPhone.do", {name:name, phone:phone, password:password, code:code}, function (data) {
 				layer.msg(data.result);
 			})
 		}

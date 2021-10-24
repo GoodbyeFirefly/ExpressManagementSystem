@@ -188,6 +188,7 @@ public class UserController {
     public String updateInfoByPhone(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
+        String password = request.getParameter("password");
         String code = request.getParameter("code");
         String sysCode = UserUtil.getLoginSms(request.getSession(), phone);
         User wxUser = UserUtil.getWxUser(request.getSession());
@@ -206,17 +207,21 @@ public class UserController {
                 User newUser = UserService.findByPhone(wxUser.getUserphone());
                 newUser.setUsername(name);// 修改用户名
                 newUser.setUserphone(phone);// 修改手机号
-                UserUtil.setWxUser(request.getSession(), newUser);
+                newUser.setPassword(password);
                 flag = UserService.update(newUser);
+
+                UserUtil.setWxUser(request.getSession(), newUser);
             } else {
                 Courier newCourier = CourierService.findByPhone(wxUser.getUserphone());
                 newCourier.setCouriername(name);
                 newCourier.setCourierphone(phone);
+                newCourier.setPassword(password);
+                flag = CourierService.update(newCourier);
+
                 User user = new User();
                 user.setUsername(name);
                 user.setUserphone(phone);
                 UserUtil.setWxUser(request.getSession(), user);
-                flag = CourierService.update(newCourier);
             }
 
             if (flag) {
