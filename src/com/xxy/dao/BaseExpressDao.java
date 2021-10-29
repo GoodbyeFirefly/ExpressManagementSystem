@@ -3,6 +3,7 @@ package com.xxy.dao;
 import com.xxy.bean.Express;
 import com.xxy.exception.DuplicateCodeException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -81,4 +82,10 @@ public interface BaseExpressDao {
     boolean delete(int id);
 
     List<Express> findByUserPhoneAndStatus(String userPhone, int status);
+
+    Map<String, ArrayList<String>> getTotalRank (int offset, int pageNumber);
+
+    Map<String, ArrayList<String>> getYearRank (int offset, int pageNumber);
+
+    Map<String, ArrayList<String>> getMonthRank (int offset, int pageNumber);
 }

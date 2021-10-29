@@ -38,6 +38,16 @@ public class ExpressDaoMysql implements BaseExpressDao {
     // 快递的删除
     public static final String SQL_DELETE = "DELETE FROM EXPRESS WHERE ID=?";
 
+    // 获得懒人排行榜总排名
+    public static final String SQL_GET_TOTAL_RANK = "SELECT USERNAME,COUNT(NUMBER) AS score FROM EXPRESS GROUP BY USERNAME ORDER BY score DESC LIMIT ?,?";
+
+    // 获得懒人排行榜年排名
+    public static final String SQL_GET_YEAR_RANK = "SELECT USERNAME,COUNT(NUMBER) AS score FROM EXPRESS WHERE (YEAR(INTIME)=YEAR(NOW()) OR NULL) GROUP BY USERNAME ORDER BY score DESC LIMIT ?,?";
+
+    // 获得懒人排行榜月排名
+    public static final String SQL_GET_MONTH_RANK = "SELECT USERNAME,COUNT(NUMBER) AS score FROM EXPRESS WHERE (MONTH(INTIME)=MONTH(NOW()) OR NULL) GROUP BY USERNAME ORDER BY score DESC LIMIT ?,?";
+
+
     /**
      * 用于查询数据库中的全部快递（总数+新增），待取件快递（总数+新增）
      *
@@ -494,6 +504,96 @@ public class ExpressDaoMysql implements BaseExpressDao {
             DruidUtil.close(conn,state,null);
         }
         return false;
+    }
+
+    @Override
+    public Map<String, ArrayList<String>> getTotalRank (int offset, int pageNumber) {
+        Map<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> nameListTotal = new ArrayList<>();
+        ArrayList<String> scoreListTotal = new ArrayList<>();
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.prepareStatement(SQL_GET_TOTAL_RANK);
+            statement.setInt(1, offset);
+            statement.setInt(2, pageNumber);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString("username");
+                String score = resultSet.getString("score");
+                nameListTotal.add(name);
+                scoreListTotal.add(score);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(connection, statement, resultSet);
+        }
+        data.put("nameListTotal", nameListTotal);
+        data.put("scoreListTotal", scoreListTotal);
+
+        return data;
+    }
+
+    @Override
+    public Map<String, ArrayList<String>> getYearRank(int offset, int pageNumber) {
+        Map<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> nameListYear = new ArrayList<>();
+        ArrayList<String> scoreListYear = new ArrayList<>();
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.prepareStatement(SQL_GET_YEAR_RANK);
+            statement.setInt(1, offset);
+            statement.setInt(2, pageNumber);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString("username");
+                String score = resultSet.getString("score");
+                nameListYear.add(name);
+                scoreListYear.add(score);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(connection, statement, resultSet);
+        }
+        data.put("nameListYear", nameListYear);
+        data.put("scoreListYear", scoreListYear);
+
+        return data;
+    }
+
+    @Override
+    public Map<String, ArrayList<String>> getMonthRank(int offset, int pageNumber) {
+        Map<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> nameListMonth = new ArrayList<>();
+        ArrayList<String> scoreListMonth = new ArrayList<>();
+        Connection connection = DruidUtil.getConnection();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.prepareStatement(SQL_GET_MONTH_RANK);
+            statement.setInt(1, offset);
+            statement.setInt(2, pageNumber);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString("username");
+                String score = resultSet.getString("score");
+                nameListMonth.add(name);
+                scoreListMonth.add(score);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DruidUtil.close(connection, statement, resultSet);
+        }
+        data.put("nameListMonth", nameListMonth);
+        data.put("scoreListMonth", scoreListMonth);
+
+        return data;
     }
 
 
