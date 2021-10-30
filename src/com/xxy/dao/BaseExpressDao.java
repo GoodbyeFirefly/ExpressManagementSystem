@@ -83,6 +83,12 @@ public interface BaseExpressDao {
 
     List<Express> findByUserPhoneAndStatus(String userPhone, int status);
 
+    /**
+     * 获得总排名
+     * @param offset 分页查询：偏移位置（这里一般选择0）
+     * @param pageNumber 分页查询：每页有几条数据
+     * @return 返回map集合，包括nameListTotal、scoreListTotal
+     */
     Map<String, ArrayList<String>> getTotalRank (int offset, int pageNumber);
 
     Map<String, ArrayList<String>> getYearRank (int offset, int pageNumber);

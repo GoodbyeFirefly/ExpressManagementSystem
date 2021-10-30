@@ -4,6 +4,7 @@ import com.xxy.bean.User;
 import com.xxy.dao.BaseUserDao;
 import com.xxy.dao.impl.UserDaoMysql;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +37,5 @@ public class UserService {
     public static Map<String, Integer> console() {
         return dao.console();
     }
+
 }

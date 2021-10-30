@@ -7,6 +7,7 @@ import com.xxy.exception.DuplicateCodeException;
 import com.xxy.util.RandomUtil;
 import com.xxy.util.SMSUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -140,5 +141,17 @@ public class ExpressService {
 
     public static List<Express> findByUserPhoneAndStatus(String userPhone, int status) {
         return dao.findByUserPhoneAndStatus(userPhone, status);
+    }
+
+    public static Map<String, ArrayList<String>> getTotalRankData(int offset, int pageNum) {
+        return dao.getTotalRank(offset, pageNum);
+    }
+
+    public static Map<String, ArrayList<String>> getYearRankData(int offset, int pageNum) {
+        return dao.getYearRank(offset, pageNum);
+    }
+
+    public static Map<String, ArrayList<String>> getMonthRankData(int offset, int pageNum) {
+        return dao.getMonthRank(offset, pageNum);
     }
 }

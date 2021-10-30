@@ -16,6 +16,9 @@ import com.xxy.util.UserUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserController {
     @ResponseBody("/wx/loginSms.do")
@@ -232,6 +235,23 @@ public class UserController {
                 msg.setResult("信息修改失败");
             }
         }
+        return JSONUtil.toJSON(msg);
+    }
+
+    @ResponseBody("/wx/getRankData.do")
+    public String getRankData(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, ArrayList<String>> data = new HashMap<>();
+        Map<String, ArrayList<String>> map1 = ExpressService.getTotalRankData(0, 5);
+        Map<String, ArrayList<String>> map2 = ExpressService.getYearRankData(0, 5);
+        Map<String, ArrayList<String>> map3 = ExpressService.getMonthRankData(0, 5);
+        data.put("nameListTotal", map1.get("nameListTotal"));
+        data.put("scoreListTotal", map1.get("scoreListTotal"));
+        data.put("nameListYear", map2.get("nameListYear"));
+        data.put("scoreListYear", map2.get("scoreListYear"));
+        data.put("nameListMonth", map3.get("nameListMonth"));
+        data.put("scoreListMonth", map3.get("scoreListMonth"));
+        Message msg = new Message();
+        msg.setData(data);
         return JSONUtil.toJSON(msg);
     }
 
