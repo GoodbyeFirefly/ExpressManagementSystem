@@ -12,6 +12,7 @@ public class UserUtil {
     public static String getUserphone(HttpSession session) {
         // 还未存储录入人的信息，这里先暂时代替一下
         User wxUser = (User) session.getAttribute("wxUser");
+        if (wxUser == null) return "18888888888";
         return wxUser.getUserphone();
     }
     public static String getLoginSms(HttpSession session, String userPhone) {
